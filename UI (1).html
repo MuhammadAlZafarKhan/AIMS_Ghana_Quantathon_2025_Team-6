@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaMine – The Quantum Future for Water</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Leaflet.js CSS for the map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+    <style>
+        /* --- Variables & Reset --- */
+        :root {
+            --primary-color: #0077B6; /* Deep Blue */
+            --secondary-color: #00B4D8; /* Sky Blue */
+            --accent-color: #FFB703; /* Yellow/Orange for CTAs */
+            --accent-gradient: linear-gradient(45deg, #FFB703, #FFC74C);
+            --dark-color: #212529; /* Main Text */
+            --light-color: #F8F9FA; /* Light Background */
+            --white-color: #FFFFFF;
+            --border-color: #dee2e6; /* Light border */
+            --success-color: #198754; /* Green */
+            --warning-color: #ffc107; /* Yellow */
+            --danger-color: #dc3545;  /* Red */
+            --font-heading: 'Montserrat', sans-serif;
+            --font-body: 'Roboto', sans-serif;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--dark-color);
+            line-height: 1.7;
+            background: var(--white-color);
+        }
+
+        /* --- Utility Components --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.5rem; }
+        h3 { font-size: 1.5rem; }
+
+        p { margin-bottom: 1rem; }
+        a { text-decoration: none; color: var(--primary-color); }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+            text-align: center;
+        }
+
+        .content-section {
+            padding: 6rem 0;
+            text-align: center;
+        }
+
+        .alternate-bg {
+            background: var(--light-color);
+        }
+
+        /* --- Buttons --- */
+        .cta-button {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            color: var(--dark-color);
+            cursor: pointer;
+        }
+
+        .cta-button.primary {
+            background: var(--accent-gradient);
+            color: var(--dark-color);
+        }
+
+        .cta-button.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 183, 3, 0.4);
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background: var(--white-color);
+            box-shadow: var(--box-shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: background 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo img {
+            height: 45px;
+            width: auto;
+        }
+
+        header ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        header ul a {
+            font-weight: 500;
+            color: var(--dark-color);
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        header ul a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        header ul a:hover::after {
+            width: 100%;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://newafricanmagazine.com/wordpress/wp-content/uploads/32827062d398c3bcebce44c02ac4fa3f.jpg') no-repeat center center/cover;
+            height: 90vh;
+            color: var(--white-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 80px; /* Offset for fixed header */
+        }
+
+        .hero-content { max-width: 800px; }
+        .hero h1 { margin-bottom: 1.5rem; }
+        .hero p { font-size: 1.2rem; margin-bottom: 2rem; }
+
+        /* --- Cards Section --- */
+        .cards-container {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: var(--white-color);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            flex: 1;
+            max-width: 350px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Two-Column Section --- */
+        .two-columns {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            text-align: left;
+        }
+
+        .two-columns .text-content, .two-columns .image-content { flex: 1; }
+        .two-columns ul { list-style: none; margin-top: 1.5rem; }
+        .two-columns ul li { margin-bottom: 1rem; display: flex; align-items: center; }
+
+        .two-columns ul i {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            margin-right: 0.8rem;
+        }
+
+        .two-columns .image-content img {
+            width: 100%;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        /* --- Models Section --- */
+        .models-selector {
+            background: var(--white-color);
+            border-radius: 50px;
+            padding: 0.5rem;
+            display: inline-flex;
+            margin-bottom: 3rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+        }
+
+        .model-btn {
+            background: transparent;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            color: #6c757d;
+        }
+
+        .model-btn.active {
+            background: var(--primary-color);
+            color: var(--white-color);
+            box-shadow: var(--box-shadow);
+        }
+
+        .model-explanation { max-width: 700px; margin: auto; text-align: center; }
+        .model-desc { display: none; }
+        .model-desc.active {
+            display: block;
+            animation: fadeInDesc 0.5s ease-in-out;
+        }
+        @keyframes fadeInDesc {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Dashboard Section (Merged) --- */
+        .dashboard-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            text-align: left;
+        }
+
+        .control-panel, .display-panel {
+            background-color: var(--white-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--box-shadow);
+        }
+
+        .control-panel {
+            flex: 1;
+            min-width: 320px;
+        }
+
+        .display-panel {
+            flex: 2.5;
+            min-width: 400px;
+        }
+
+        .dashboard-container h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group { margin-bottom: 1.5rem; }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--white-color);
+            color: var(--dark-color);
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.25);
+        }
+
+        .model-selection .radio-label {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        
+        .model-selection .radio-label:hover {
+            background-color: var(--light-color);
+        }
+        
+        input[type="radio"] { display: none; }
+
+        input[type="radio"] + label .radio-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #adb5bd;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            display: inline-block;
+            position: relative;
+            transition: border-color 0.2s;
+        }
+
+        input[type="radio"]:checked + label .radio-custom {
+            border-color: var(--primary-color);
+        }
+
+        input[type="radio"]:checked + label .radio-custom::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        input[type="radio"]:checked + label {
+            color: var(--dark-color);
+            border-color: var(--primary-color);
+        }
+
+        .run-button {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white-color);
+            background: var(--primary-color);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .run-button:hover {
+            background: #005f8a;
+            transform: translateY(-2px);
+        }
+        
+        .run-button.loading {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loader {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #FFF;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: none;
+            animation: rotation 1s linear infinite;
+        }
+        
+        .run-button.loading .loader { display: inline-block; }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #map {
+            width: 100%;
+            height: 450px;
+            background-color: #e9ecef;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+        }
+        
+        #results-panel {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        #results-content {
+            background-color: #e9ecef;
+            padding: 1.5rem;
+            border-radius: 6px;
+            min-height: 120px;
+            color: var(--dark-color);
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            transition: opacity 0.3s;
+            border: 1px solid #ced4da;
+        }
+
+        /* --- Scroll Animation --- */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--dark-color);
+            color: var(--light-color);
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        /* --- Responsive Design --- */
+        @media(max-width: 992px) {
+            .two-columns { flex-direction: column; }
+            .two-columns .image-content { margin-top: 2rem; }
+        }
+        @media(max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+
+            header nav { flex-direction: column; height: auto; padding: 1rem 0; }
+            header ul { margin-top: 1rem; margin-bottom: 1rem; }
+            .cta-button { display: none; } /* Hide contact button on mobile for simplicity */
+
+            .cards-container { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">
+                <img src="https://i.postimg.cc/8z7rqrhD/Logo-Black-BG.png" alt="AquaMine Logo">
+            </a>
+            <ul>
+                <li><a href="#problem">The Problem</a></li>
+                <li><a href="#solution">Our Solution</a></li>
+                <li><a href="#models">The Models</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+            </ul>
+            <a href="#dashboard" class="cta-button">Launch Analysis</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content container">
+                <h1>A Quantum Drop of Hope for Mining Areas</h1>
+                <p>AquaMine uses quantum computing to optimize drinking water distribution and combat pollution from illegal mining in Ghana.</p>
+                <a href="#dashboard" class="cta-button primary">Go to Analysis Dashboard</a>
+            </div>
+        </section>
+
+        <section id="problem" class="container content-section">
+            <h2>A Silent Crisis with Heavy Consequences</h2>
+            <p class="subtitle">Illegal mining (Galamsey) contaminates vital water sources, endangering millions of lives.</p>
+            <div class="cards-container fade-in">
+                <div class="card">
+                    <i class="fas fa-tint-slash"></i>
+                    <h3>High Contamination</h3>
+                    <p>Heavy metals like mercury and cyanide poison rivers, making the water unfit for consumption.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-heartbeat"></i>
+                    <h3>Health Impact</h3>
+                    <p>Increase in waterborne diseases (cholera, typhoid) and long-term health problems in affected communities.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>Difficult Access</h3>
+                    <p>Isolated communities are the most vulnerable, with limited access to drinking water infrastructure.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="content-section alternate-bg">
+            <div class="container two-columns fade-in">
+                <div class="text-content">
+                    <h2>Quantum Optimization, Human Impact</h2>
+                    <p>Our platform identifies priority areas and optimizes delivery routes for drinking water. We combine geospatial, health, and demographic data to create effective intervention strategies.</p>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Precise identification of pollution hotspots.</li>
+                        <li><i class="fas fa-check-circle"></i> Mapping of the most vulnerable communities.</li>
+                        <li><i class="fas fa-check-circle"></i> Logistical optimization for fast and targeted aid.</li>
+                    </ul>
+                </div>
+                <div class="image-content">
+                    <img src="https://www.researchgate.net/publication/340879945/figure/fig2/AS:883692050317312@1587700011238/Density-map-of-water-consumption-within-the-regions-of-Ghana-Source-Authors-Construct.png" alt="Water distribution optimization map">
+                </div>
+            </div>
+        </section>
+
+        <section id="models" class="container content-section">
+            <h2 class="fade-in">At the Heart of Technology: Compare to Innovate</h2>
+            <p class="subtitle fade-in">Our interface allows for real-time comparison of the performance of quantum and classical models.</p>
+            <div class="models-selector fade-in">
+                <button class="model-btn active" data-model="qsvc">QSVC</button>
+                <button class="model-btn" data-model="qnn">QNN</button>
+                <button class="model-btn" data-model="classical">Classical (SVM)</button>
+            </div>
+            <div class="model-explanation fade-in">
+                <div id="qsvc" class="model-desc active">
+                    <h3>Quantum Support Vector Classifier (QSVC)</h3>
+                    <p>Uses quantum feature spaces to find complex patterns in contamination data. Ideal for classification problems with non-linear interactions.</p>
+                </div>
+                <div id="qnn" class="model-desc">
+                    <h3>Quantum Neural Network (QNN)</h3>
+                    <p>A hybrid neural network that leverages quantum principles for information processing. A cutting-edge research area for potentially more powerful future solutions.</p>
+                </div>
+                <div id="classical" class="model-desc">
+                    <h3>Support Vector Machine (Classical)</h3>
+                    <p>A robust and proven machine learning algorithm that serves as a benchmark for evaluating the performance of our quantum models.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Merged Dashboard Section -->
+        <section id="dashboard" class="content-section alternate-bg">
+            <div class="container fade-in">
+                <h2>Real-Time Analysis Dashboard</h2>
+                <p class="subtitle">Select a region and a model to visualize at-risk areas and get recommendations.</p>
+                
+                <div class="dashboard-container">
+                    <div class="control-panel">
+                        <h3><i class="fas fa-cogs"></i> Analysis Parameters</h3>
+                        <form id="analysis-form">
+                            <div class="form-group">
+                                <label for="region-select">Region of Ghana</label>
+                                <select id="region-select">
+                                    <option value="Ashanti">Ashanti</option>
+                                    <option value="Western">Western</option>
+                                    <option value="Eastern">Eastern</option>
+                                    <option value="Central">Central</option>
+                                    <option value="Brong-Ahafo">Brong-Ahafo</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group model-selection">
+                                <label>Optimization Model</label>
+                                
+                                <input type="radio" id="model-classical" name="model" value="Classical" checked>
+                                <label for="model-classical" class="radio-label">
+                                    <span class="radio-custom"></span>
+                                    Classical Machine Learning
+                                </label>
+                                
+                                <input type="radio" id="model-qsvc" name="model" value="Quantum (QSVC)">
+                                <label for="model-qsvc" class="radio-label">
+                                    <span class="radio-custom"></span>
+                                    Quantum (QSVC)
+                                </label>
+            
+                                <input type="radio" id="model-qnn" name="model" value="Quantum (QNN)">
+                                 <label for="model-qnn" class="radio-label">
+                                    <span class="radio-custom"></span>
+                                    Quantum (QNN)
+                                </label>
+                            </div>
+            
+                            <button type="submit" class="run-button" id="run-button">
+                                <span class="button-text">Run Analysis</span>
+                                <div class="loader"></div>
+                            </button>
+                        </form>
+                    </div>
+            
+                    <div class="display-panel">
+                        <h3><i class="fas fa-map-marked-alt"></i> Data Visualization</h3>
+                        <div id="map"></div>
+                        
+                        <div id="results-panel">
+                            <h3><i class="fas fa-chart-bar"></i> Results and Recommendations</h3>
+                            <div id="results-content">
+                                Please run an analysis to display the results.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AquaMine. A project for a sustainable future. Built with passion.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // --- Model selector handler (Homepage) ---
+            const modelButtons = document.querySelectorAll('.model-btn');
+            const modelDescriptions = document.querySelectorAll('.model-desc');
+
+            modelButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    modelButtons.forEach(btn => btn.classList.remove('active'));
+                    modelDescriptions.forEach(desc => desc.classList.remove('active'));
+                    this.classList.add('active');
+                    const model = this.dataset.model;
+                    const activeDescription = document.getElementById(model);
+                    if (activeDescription) {
+                        activeDescription.classList.add('active');
+                    }
+                });
+            });
+
+            // --- Header animation on scroll ---
+            const header = document.querySelector('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    header.style.background = 'rgba(255, 255, 255, 0.95)';
+                    header.style.backdropFilter = 'blur(10px)';
+                } else {
+                    header.style.background = 'var(--white-color)';
+                    header.style.backdropFilter = 'none';
+                }
+            });
+
+            // --- Scroll animation with Intersection Observer ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Animate only once
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            const elementsToAnimate = document.querySelectorAll('.fade-in');
+            elementsToAnimate.forEach(el => observer.observe(el));
+
+
+            // --- DASHBOARD LOGIC (MERGED) ---
+            const form = document.getElementById('analysis-form');
+            const runButton = document.getElementById('run-button');
+            const buttonText = document.querySelector('.button-text');
+            const resultsContent = document.getElementById('results-content');
+            
+            // --- Initialize Leaflet Map ---
+            const map = L.map('map').setView([7.9465, -1.0232], 7); 
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            let markerLayer = L.layerGroup().addTo(map);
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (runButton.classList.contains('loading')) return;
+
+                const region = document.getElementById('region-select').value;
+                const model = document.querySelector('input[name="model"]:checked').value;
+
+                runButton.classList.add('loading');
+                buttonText.textContent = 'Analysis in progress...';
+                resultsContent.style.opacity = '0.5';
+                resultsContent.textContent = `Calculating with model ${model} for the ${region} region...`;
+                
+                markerLayer.clearLayers();
+
+                // Simulate an API call with a timeout
+                setTimeout(() => {
+                    const { points, summary } = generateFakeResults(region, model);
+
+                    points.forEach(point => {
+                        const markerColor = 
+                            point.risk === 'high' ? 'var(--danger-color)' :
+                            point.risk === 'medium' ? 'var(--warning-color)' :
+                            'var(--success-color)';
+                        
+                        const circleMarker = L.circleMarker([point.lat, point.lng], {
+                            radius: 8,
+                            fillColor: markerColor,
+                            color: '#fff',
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        }).addTo(markerLayer);
+
+                        circleMarker.bindTooltip(`Risk: ${point.risk.charAt(0).toUpperCase() + point.risk.slice(1)}`);
+                    });
+
+                    resultsContent.textContent = summary;
+                    runButton.classList.remove('loading');
+                    buttonText.textContent = "Run Analysis";
+                    resultsContent.style.opacity = '1';
+
+                }, 2500);
+            });
+
+            function generateFakeResults(region, model) {
+                const points = [];
+                const numPoints = Math.floor(Math.random() * 25) + 15;
+
+                const regionCoords = {
+                    "Ashanti": { lat: 6.75, lng: -1.5, zoom: 8 },
+                    "Western": { lat: 5.5, lng: -2.5, zoom: 8 },
+                    "Eastern": { lat: 6.3, lng: -0.5, zoom: 8 },
+                    "Central": { lat: 5.3, lng: -1.3, zoom: 8 },
+                    "Brong-Ahafo": { lat: 7.75, lng: -1.75, zoom: 7 }
+                };
+                
+                const center = regionCoords[region];
+                map.setView([center.lat, center.lng], center.zoom);
+
+                const latRange = 1.5;
+                const lngRange = 1.5;
+
+                for (let i = 0; i < numPoints; i++) {
+                    const riskValue = Math.random();
+                    let risk = riskValue > 0.8 ? 'high' : (riskValue > 0.4 ? 'medium' : 'low');
+                    
+                    points.push({
+                        lat: center.lat + (Math.random() - 0.5) * latRange,
+                        lng: center.lng + (Math.random() - 0.5) * lngRange,
+                        risk: risk
+                    });
+                }
+                
+                const highRiskCount = points.filter(p => p.risk === 'high').length;
+                const mediumRiskCount = points.filter(p => p.risk === 'medium').length;
+                const isQuantum = model.startsWith('Quantum');
+                
+                const speedUp = isQuantum ? (Math.random() * 2 + 1.5).toFixed(1) : 1.0;
+                const accuracy = isQuantum ? (Math.random() * 5 + 92).toFixed(1) : (Math.random() * 5 + 88).toFixed(1);
+
+                const summary = 
+`ANALYSIS REPORT
+=========================================
+Target Region  : ${region}
+Model Used     : ${model}
+-----------------------------------------
+PERFORMANCE:
+  Accuracy     : ${accuracy}%
+  Speed        : ${speedUp}x (vs. baseline)
+
+RISK SUMMARY:
+  High-Risk Zones   : ${highRiskCount}
+  Medium-Risk Zones : ${mediumRiskCount}
+  Low-Risk Zones    : ${numPoints - highRiskCount - mediumRiskCount}
+=========================================
+RECOMMENDATION:
+Prioritize deployment of purification units to the ${highRiskCount} critical zones identified.
+Initiate route optimization for efficient distribution.`;
+                
+                return { points, summary };
+            }
+        });
+    </script>
+</body>
+</html>
