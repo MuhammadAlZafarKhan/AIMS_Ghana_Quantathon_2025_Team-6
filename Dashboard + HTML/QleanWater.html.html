@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Quantum Pipe Sensor Optimization</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel=stylesheet>
+<style>:root{--quantum-blue:#00f0ff;--quantum-purple:#8a2be2;--dark-space:#0a0e17;--neon-pink:#ff00aa;--neon-green:#00ffaa;--panel-bg:rgba(10, 14, 23, 0.8);--panel-border:1px solid rgba(0, 240, 255, 0.3)}body{font-family:Roboto,sans-serif;margin:0;padding:0;background-color:var(--dark-space);color:#fff;background-image:radial-gradient(circle at 20% 30%,rgba(0,240,255,.1) 0,transparent 20%),radial-gradient(circle at 80% 70%,rgba(138,43,226,.1) 0,transparent 20%);min-height:100vh}.dashboard{max-width:1400px;margin:0 auto;padding:20px}header{text-align:center;margin-bottom:30px;padding:20px;background:var(--panel-bg);border-radius:10px;border:var(--panel-border);box-shadow:0 0 30px rgba(0,240,255,.2)}h1{font-family:Orbitron,sans-serif;color:var(--quantum-blue);margin:0;font-size:2.5rem;text-shadow:0 0 10px rgba(0,240,255,.5);letter-spacing:2px}.subtitle{color:var(--neon-green);font-size:1.2rem;margin-top:10px}.tabs{display:flex;margin-bottom:20px;background:var(--panel-bg);border-radius:10px;border:var(--panel-border);overflow:hidden}.tab{padding:15px 25px;cursor:pointer;font-family:Orbitron,sans-serif;font-weight:700;color:var(--quantum-blue);text-align:center;flex:1;transition:all .3s ease;position:relative;overflow:hidden}.tab:not(.active):hover{background:rgba(0,240,255,.1);color:#fff}.tab.active{background:linear-gradient(90deg,rgba(0,240,255,.2),rgba(138,43,226,.2));color:#fff;box-shadow:inset 0 0 15px rgba(0,240,255,.5)}.tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--quantum-blue),var(--quantum-purple))}.tab-content{display:none;animation:fadeIn .5s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.tab-content.active{display:block}.simulation-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:25px;margin-bottom:30px}.simulation{background:var(--panel-bg);border-radius:10px;border:var(--panel-border);padding:20px;box-shadow:0 0 20px rgba(0,0,0,.3);transition:transform .3s ease,box-shadow .3s ease}.simulation:hover{transform:translateY(-5px);box-shadow:0 5px 30px rgba(0,240,255,.3)}.simulation h2{font-family:Orbitron,sans-serif;color:var(--quantum-blue);margin-top:0;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid rgba(0,240,255,.3);font-size:1.5rem;text-shadow:0 0 5px rgba(0,240,255,.3)}.controls{display:flex;justify-content:space-between;margin-bottom:15px;align-items:center;flex-wrap:wrap;gap:10px}.agent-control{display:flex;align-items:center;background:rgba(0,0,0,.3);border-radius:5px;padding:5px 10px;border:1px solid rgba(0,240,255,.3)}.agent-control button{background:rgba(0,240,255,.2);color:var(--quantum-blue);border:none;width:28px;height:28px;border-radius:3px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s ease}.agent-control button:hover{background:rgba(0,240,255,.4)}.agent-control input{width:50px;text-align:center;margin:0 8px;background:0 0;border:1px solid rgba(0,240,255,.3);color:#fff;padding:3px;border-radius:3px}.radio-group{display:flex;gap:15px;background:rgba(0,0,0,.3);padding:8px 15px;border-radius:5px;border:1px solid rgba(0,240,255,.3)}.radio-option{display:flex;align-items:center;gap:5px;cursor:pointer}.radio-option input{appearance:none;width:16px;height:16px;border:2px solid var(--quantum-blue);border-radius:50%;position:relative;cursor:pointer;transition:all .2s ease}.radio-option input:checked{background:var(--quantum-blue);box-shadow:0 0 5px var(--quantum-blue)}.radio-option input:checked::after{content:'';position:absolute;width:8px;height:8px;background:#fff;border-radius:50%;top:2px;left:2px}.radio-option label{cursor:pointer;color:rgba(255,255,255,.8);transition:color .2s ease}.radio-option input:checked+label{color:var(--quantum-blue);font-weight:700}canvas{background-color:rgba(0,0,0,.3);border:1px solid rgba(0,240,255,.3);border-radius:5px;width:100%;height:300px;display:block}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}.metric-box{background:rgba(0,0,0,.3);border-radius:5px;padding:12px;text-align:center;border:1px solid rgba(0,240,255,.2);transition:all .3s ease}.metric-box:hover{transform:translateY(-3px);box-shadow:0 5px 15px rgba(0,240,255,.2);border-color:var(--quantum-blue)}.metric-title{font-size:12px;color:var(--quantum-blue);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px}.metric-value{font-weight:700;font-size:1.2rem;font-family:Orbitron,sans-serif}.positive{color:var(--neon-green);text-shadow:0 0 5px rgba(0,255,170,.5)}.negative{color:var(--neon-pink);text-shadow:0 0 5px rgba(255,0,170,.5)}button#runSim{background:linear-gradient(90deg,var(--quantum-blue),var(--quantum-purple));color:#fff;border:none;padding:15px 40px;border-radius:50px;cursor:pointer;font-size:1.1rem;font-family:Orbitron,sans-serif;display:block;margin:30px auto;transition:all .3s ease;box-shadow:0 0 20px rgba(0,240,255,.3);position:relative;overflow:hidden}button#runSim:hover{transform:translateY(-3px);box-shadow:0 0 30px rgba(0,240,255,.5)}button#runSim::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(to bottom right,transparent,transparent,transparent,rgba(255,255,255,.1),transparent,transparent,transparent);transform:rotate(30deg);transition:all .5s ease}button#runSim:hover::before{left:100%}.chart-container{width:100%;height:300px;margin-top:20px;background:rgba(0,0,0,.3);border-radius:5px;border:1px solid rgba(0,240,255,.3);padding:10px}.quantum-circuit{background:rgba(0,0,0,.3);border-radius:5px;border:1px solid rgba(0,240,255,.3);padding:20px;margin-top:20px;position:relative;overflow:hidden;min-height:200px}.wire{position:absolute;height:2px;background:rgba(0,240,255,.7);width:100%;left:0}.quantum-gate{position:absolute;width:30px;height:30px;background:rgba(0,240,255,.2);border:2px solid var(--quantum-blue);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--quantum-blue);font-weight:700;transform:translateX(-15px);z-index:2}.gate-h{background:rgba(0,240,255,.2);border-color:var(--quantum-blue)}.gate-x{background:rgba(255,0,170,.2);border-color:var(--neon-pink)}.gate-y{background:rgba(0,255,170,.2);border-color:var(--neon-green)}.gate-z{background:rgba(138,43,226,.2);border-color:var(--quantum-purple)}.gate-cnot{position:absolute;width:30px;height:30px;background:rgba(255,0,170,.2);border:2px solid var(--neon-pink);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;transform:translateX(-15px);z-index:2}.gate-cnot::after{content:'';position:absolute;width:10px;height:10px;background:var(--neon-pink);border-radius:50%;bottom:-20px}.control-dot{position:absolute;width:12px;height:12px;background:var(--neon-pink);border-radius:50%;transform:translateX(-6px);z-index:2}.measurement{position:absolute;width:30px;height:30px;background:rgba(255,255,255,.2);border:2px solid #fff;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;transform:translateX(-15px);z-index:2}.measurement::after{content:'→';position:absolute;right:-15px;color:#fff}.qubit-label{position:absolute;left:10px;color:var(--quantum-blue);font-family:Orbitron,sans-serif;font-size:12px;z-index:2}.pipe{stroke:var(--quantum-blue);stroke-width:10;fill:none;stroke-linecap:round}.pipe-joint{fill:var(--quantum-blue);stroke:none}.leak{fill:var(--neon-pink);stroke:none;opacity:0;animation:pulse 1s infinite}@keyframes pulse{0%{opacity:0;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(1)}}.sensor{fill:var(--neon-green);stroke:white;stroke-width:2}.sensor-active{fill:var(--neon-green);filter:drop-shadow(0 0 5px var(--neon-green))}.sensor-inactive{fill:#666;stroke:#999}@media (max-width:768px){.simulation-container{grid-template-columns:1fr}.tabs{flex-direction:column}.controls{flex-direction:column;align-items:flex-start}.radio-group{width:100%;justify-content:space-between}}</style>
+</head>
+<body>
+<div class=dashboard>
+<header>
+<h1>Quantum Pipe Sensor Optimization</h1>
+<div class=subtitle>Optimal Sensor Placement for Leak Detection</div>
+</header>
+<div class=tabs>
+<div class="tab active" data-tab=simulations>Pipe Network</div>
+<div class=tab data-tab=performance>Training Metrics</div>
+<div class=tab data-tab=quantum>Quantum Learning</div>
+</div>
+<div id=simulations class="tab-content active">
+<div class=simulation-container>
+<div class=simulation>
+<h2>Water Distribution Network</h2>
+<div class=controls>
+<div class=agent-control>
+<button id=sensor-decrease>-</button>
+<input type=number id=sensor-count value=3 min=1 max=10>
+<button id=sensor-increase>+</button>
+<span style=margin-left:10px>Sensors</span>
+</div>
+<div class=radio-group>
+<div class=radio-option>
+<input type=radio id=pipe-deterministic name=pipe-type checked>
+<label for=pipe-deterministic>Deterministic</label>
+</div>
+<div class=radio-option>
+<input type=radio id=pipe-stochastic name=pipe-type>
+<label for=pipe-stochastic>Stochastic</label>
+</div>
+</div>
+</div>
+<svg id=pipeCanvas width=100% height=300></svg>
+<div class=metrics>
+<div class=metric-box>
+<div class=metric-title>Detection Rate</div>
+<div class=metric-value id=detection-rate>0%</div>
+</div>
+<div class=metric-box>
+<div class=metric-title>Cost Savings</div>
+<div class=metric-value id=cost-savings>$0</div>
+</div>
+<div class=metric-box>
+<div class=metric-title>Leaks Found</div>
+<div class=metric-value id=leaks-found>0</div>
+</div>
+</div>
+</div>
+<div class=simulation>
+<h2>Gas Pipeline Network</h2>
+<div class=controls>
+<div class=agent-control>
+<button id=gas-sensor-decrease>-</button>
+<input type=number id=gas-sensor-count value=5 min=3 max=15>
+<button id=gas-sensor-increase>+</button>
+<span style=margin-left:10px>Sensors</span>
+</div>
+<div class=radio-group>
+<div class=radio-option>
+<input type=radio id=gas-deterministic name=gas-type checked>
+<label for=gas-deterministic>Deterministic</label>
+</div>
+<div class=radio-option>
+<input type=radio id=gas-stochastic name=gas-type>
+<label for=gas-stochastic>Stochastic</label>
+</div>
+</div>
+</div>
+<svg id=gasCanvas width=100% height=300></svg>
+<div class=metrics>
+<div class=metric-box>
+<div class=metric-title>Detection Rate</div>
+<div class=metric-value id=gas-detection-rate>0%</div>
+</div>
+<div class=metric-box>
+<div class=metric-title>Cost Savings</div>
+<div class=metric-value id=gas-cost-savings>$0</div>
+</div>
+<div class=metric-box>
+<div class=metric-title>Leaks Found</div>
+<div class=metric-value id=gas-leaks-found>0</div>
+</div>
+</div>
+</div>
+</div>
+<button id=runSim>Run Quantum Optimization</button>
+</div>
+<div id=performance class=tab-content>
+<h2>Training Performance</h2>
+<div class=simulation-container>
+<div class=simulation>
+<h3>Water Network Optimization</h3>
+<div class=chart-container>
+<canvas id=waterChart></canvas>
+</div>
+<div class=marl-info>
+<h3>Quantum Reinforcement Learning</h3>
+<p>The algorithm combines:</p>
+<ul>
+<li>Quantum-enhanced exploration of sensor placements</li>
+<li>Entanglement between pipe segments</li>
+<li>Superposition of possible leak locations</li>
+<li>Quantum interference for optimal coverage</li>
+</ul>
+<p>Current learning rate: <span id=water-learning-rate>0.0001</span></p>
+</div>
+</div>
+<div class=simulation>
+<h3>Gas Network Optimization</h3>
+<div class=chart-container>
+<canvas id=gasChart></canvas>
+</div>
+<div class=marl-info>
+<h3>Quantum Genetic Algorithm</h3>
+<p>Features of our quantum-enhanced approach:</p>
+<ul>
+<li>Quantum parallelism evaluates all placements</li>
+<li>Superposition maintains multiple solutions</li>
+<li>Entanglement preserves spatial relationships</li>
+<li>Measurement collapses to optimal configuration</li>
+</ul>
+<p>Current learning rate: <span id=gas-learning-rate>0.00015</span></p>
+</div>
+</div>
+</div>
+</div>
+<div id=quantum class=tab-content>
+<div class=simulation-container>
+<div class=simulation>
+<h3>Water Network Quantum Circuit</h3>
+<div class=quantum-circuit id=water-circuit>
+</div>
+<div class=marl-info>
+<h3>Sensor Placement Circuit</h3>
+<p>This circuit implements the quantum-enhanced optimization:</p>
+<ul>
+<li>Qubits represent potential sensor locations</li>
+<li>Hadamard gates create superposition</li>
+<li>CNOT gates encode pipe connectivity</li>
+<li>Measurement selects optimal positions</li>
+</ul>
+</div>
+</div>
+<div class=simulation>
+<h3>Gas Network Quantum Circuit</h3>
+<div class=quantum-circuit id=gas-circuit>
+</div>
+<div class=marl-info>
+<h3>Leak Detection Circuit</h3>
+<p>This circuit implements quantum leak detection:</p>
+<ul>
+<li>Qubits encode pressure differentials</li>
+<li>Quantum Fourier Transform analyzes patterns</li>
+<li>Amplitude amplification boosts leak signals</li>
+<li>Measurement identifies leak locations</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/chart.js></script>
+<script>
+let isRunning = false;
+let animationIds = [];
+let currentSimulations = {
+    water: null,
+    gas: null
+};
+let performanceData = {
+    water: {
+        detection: Array(100).fill(0),
+        cost: Array(100).fill(0),
+        timestep: Array(100).fill(0).map((_, i) => i)
+    },
+    gas: {
+        detection: Array(100).fill(0),
+        cost: Array(100).fill(0),
+        timestep: Array(100).fill(0).map((_, i) => i)
+    },
+    timestep: 0
+};
+const SIMULATION_SPEED = 3;
+let waterChart, gasChart;
+
+class PipeSimulation {
+    constructor(svgElement, isStochastic) {
+        this.svg = svgElement;
+        this.isStochastic = isStochastic;
+        this.sensorCount = parseInt(document.getElementById("sensor-count").value);
+        this.pipes = [];
+        this.joints = [];
+        this.leaks = [];
+        this.sensors = [];
+        this.detectedLeaks = 0;
+        this.totalLeaks = 0;
+        this.costSavings = 0;
+        this.init();
+    }
+
+    init() {
+        this.svg.innerHTML = '';
+        const width = this.svg.clientWidth;
+        const height = this.svg.clientHeight;
+        
+        // Create pipe network
+        this.joints = [
+            {x: width*0.1, y: height*0.5},
+            {x: width*0.3, y: height*0.3},
+            {x: width*0.3, y: height*0.7},
+            {x: width*0.5, y: height*0.2},
+            {x: width*0.5, y: height*0.8},
+            {x: width*0.7, y: height*0.3},
+            {x: width*0.7, y: height*0.7},
+            {x: width*0.9, y: height*0.5}
+        ];
+        
+        this.pipes = [
+            {from: 0, to: 1},
+            {from: 0, to: 2},
+            {from: 1, to: 3},
+            {from: 1, to: 5},
+            {from: 2, to: 4},
+            {from: 2, to: 6},
+            {from: 3, to: 5},
+            {from: 4, to: 6},
+            {from: 5, to: 7},
+            {from: 6, to: 7}
+        ];
+        
+        // Draw pipes
+        this.pipes.forEach(pipe => {
+            const from = this.joints[pipe.from];
+            const to = this.joints[pipe.to];
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            line.setAttribute("d", `M${from.x},${from.y} L${to.x},${to.y}`);
+            line.classList.add("pipe");
+            this.svg.appendChild(line);
+        });
+        
+        // Draw joints
+        this.joints.forEach(joint => {
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", joint.x);
+            circle.setAttribute("cy", joint.y);
+            circle.setAttribute("r", 6);
+            circle.classList.add("pipe-joint");
+            this.svg.appendChild(circle);
+        });
+        
+        // Initialize sensors
+        this.sensors = [];
+        for (let i = 0; i < this.sensorCount; i++) {
+            this.addSensor();
+        }
+        
+        this.leaks = [];
+        this.totalLeaks = 0;
+        this.detectedLeaks = 0;
+        this.costSavings = 0;
+        this.updateMetrics();
+    }
+    
+    addSensor() {
+        if (this.sensors.length >= 10) return;
+        
+        // Find a random pipe to place sensor on
+        const pipeIndex = Math.floor(Math.random() * this.pipes.length);
+        const pipe = this.pipes[pipeIndex];
+        const from = this.joints[pipe.from];
+        const to = this.joints[pipe.to];
+        const t = 0.2 + Math.random() * 0.6; // Position along pipe (20%-80%)
+        const x = from.x + t * (to.x - from.x);
+        const y = from.y + t * (to.y - from.y);
+        
+        const sensor = {
+            x, y,
+            pipeIndex,
+            position: t,
+            active: false,
+            element: null
+        };
+        
+        this.sensors.push(sensor);
+        this.drawSensor(sensor);
+    }
+    
+    drawSensor(sensor) {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", sensor.x);
+        circle.setAttribute("cy", sensor.y);
+        circle.setAttribute("r", 8);
+        circle.classList.add("sensor");
+        circle.classList.add("sensor-inactive");
+        sensor.element = circle;
+        this.svg.appendChild(circle);
+    }
+    
+    removeSensor() {
+        if (this.sensors.length <= 1) return;
+        const sensor = this.sensors.pop();
+        this.svg.removeChild(sensor.element);
+    }
+    
+    adjustSensorCount(count) {
+        while (this.sensors.length < count) {
+            this.addSensor();
+        }
+        while (this.sensors.length > count) {
+            this.removeSensor();
+        }
+        this.sensorCount = count;
+    }
+    
+    addLeak() {
+        // Find a random pipe to create leak on
+        const pipeIndex = Math.floor(Math.random() * this.pipes.length);
+        const pipe = this.pipes[pipeIndex];
+        const from = this.joints[pipe.from];
+        const to = this.joints[pipe.to];
+        const t = Math.random(); // Position along pipe
+        const x = from.x + t * (to.x - from.x);
+        const y = from.y + t * (to.y - from.y);
+        
+        const leak = {
+            x, y,
+            pipeIndex,
+            position: t,
+            detected: false,
+            element: null
+        };
+        
+        this.leaks.push(leak);
+        this.totalLeaks++;
+        this.drawLeak(leak);
+    }
+    
+    drawLeak(leak) {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", leak.x);
+        circle.setAttribute("cy", leak.y);
+        circle.setAttribute("r", 10);
+        circle.classList.add("leak");
+        leak.element = circle;
+        this.svg.appendChild(circle);
+    }
+    
+    update() {
+        // Randomly add leaks
+        if (Math.random() < 0.03 * SIMULATION_SPEED && this.leaks.length < 5) {
+            this.addLeak();
+        }
+        
+        // Check sensor coverage
+        this.sensors.forEach(sensor => {
+            sensor.active = false;
+            sensor.element.classList.remove("sensor-active");
+            sensor.element.classList.add("sensor-inactive");
+        });
+        
+        this.leaks.forEach(leak => {
+            leak.detected = false;
+            
+            // Check if any sensor detects this leak
+            for (const sensor of this.sensors) {
+                const distance = Math.sqrt(Math.pow(leak.x - sensor.x, 2) + Math.pow(leak.y - sensor.y, 2));
+                if (distance < 50) { // Detection radius
+                    leak.detected = true;
+                    sensor.active = true;
+                    sensor.element.classList.remove("sensor-inactive");
+                    sensor.element.classList.add("sensor-active");
+                    if (!leak.element.hasAttribute("data-detected")) {
+                        this.detectedLeaks++;
+                        leak.element.setAttribute("data-detected", "true");
+                        this.costSavings += 1000 + Math.floor(Math.random() * 2000);
+                    }
+                    break;
+                }
+            }
+            
+            // Fade out detected leaks
+            if (leak.detected && Math.random() < 0.1 * SIMULATION_SPEED) {
+                this.svg.removeChild(leak.element);
+                this.leaks = this.leaks.filter(l => l !== leak);
+            }
+        });
+        
+        this.updateMetrics();
+        
+        // Quantum learning effect
+        if (this.isStochastic && Math.random() < 0.05 * SIMULATION_SPEED) {
+            const effect = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            effect.setAttribute("cx", this.svg.clientWidth/2);
+            effect.setAttribute("cy", this.svg.clientHeight/2);
+            effect.setAttribute("r", 0);
+            effect.setAttribute("fill", "none");
+            effect.setAttribute("stroke", "rgba(138, 43, 226, 0.5)");
+            effect.setAttribute("stroke-width", "2");
+            this.svg.appendChild(effect);
+            
+            let radius = 0;
+            const grow = () => {
+                radius += 5;
+                effect.setAttribute("r", radius);
+                if (radius < 200) {
+                    requestAnimationFrame(grow);
+                } else {
+                    this.svg.removeChild(effect);
+                }
+            };
+            grow();
+        }
+    }
+    
+    updateMetrics() {
+        const detectionRate = this.totalLeaks > 0 ? Math.round((this.detectedLeaks / this.totalLeaks) * 100) : 0;
+        document.getElementById("detection-rate").textContent = `${detectionRate}%`;
+        document.getElementById("cost-savings").textContent = `$${this.costSavings.toLocaleString()}`;
+        document.getElementById("leaks-found").textContent = this.detectedLeaks;
+        
+        performanceData.water.detection.push(detectionRate);
+        performanceData.water.cost.push(this.costSavings / 1000);
+        performanceData.water.timestep.push(performanceData.timestep);
+        
+        if (performanceData.water.detection.length > 100) {
+            performanceData.water.detection.shift();
+            performanceData.water.cost.shift();
+            performanceData.water.timestep.shift();
+        }
+    }
+}
+
+class GasPipeSimulation {
+    constructor(svgElement, isStochastic) {
+        this.svg = svgElement;
+        this.isStochastic = isStochastic;
+        this.sensorCount = parseInt(document.getElementById("gas-sensor-count").value);
+        this.pipes = [];
+        this.joints = [];
+        this.leaks = [];
+        this.sensors = [];
+        this.detectedLeaks = 0;
+        this.totalLeaks = 0;
+        this.costSavings = 0;
+        this.init();
+    }
+
+    init() {
+        this.svg.innerHTML = '';
+        const width = this.svg.clientWidth;
+        const height = this.svg.clientHeight;
+        
+        // Create more complex pipe network for gas
+        this.joints = [
+            {x: width*0.1, y: height*0.2},
+            {x: width*0.1, y: height*0.8},
+            {x: width*0.3, y: height*0.1},
+            {x: width*0.3, y: height*0.4},
+            {x: width*0.3, y: height*0.6},
+            {x: width*0.3, y: height*0.9},
+            {x: width*0.5, y: height*0.2},
+            {x: width*0.5, y: height*0.5},
+            {x: width*0.5, y: height*0.8},
+            {x: width*0.7, y: height*0.3},
+            {x: width*0.7, y: height*0.7},
+            {x: width*0.9, y: height*0.4},
+            {x: width*0.9, y: height*0.6}
+        ];
+        
+        this.pipes = [
+            {from: 0, to: 2}, {from: 0, to: 3},
+            {from: 1, to: 4}, {from: 1, to: 5},
+            {from: 2, to: 6}, {from: 3, to: 6},
+            {from: 4, to: 8}, {from: 5, to: 8},
+            {from: 6, to: 7}, {from: 7, to: 8},
+            {from: 6, to: 9}, {from: 8, to: 10},
+            {from: 9, to: 11}, {from: 10, to: 12},
+            {from: 7, to: 9}, {from: 7, to: 10}
+        ];
+        
+        // Draw pipes
+        this.pipes.forEach(pipe => {
+            const from = this.joints[pipe.from];
+            const to = this.joints[pipe.to];
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            line.setAttribute("d", `M${from.x},${from.y} L${to.x},${to.y}`);
+            line.classList.add("pipe");
+            this.svg.appendChild(line);
+        });
+        
+        // Draw joints
+        this.joints.forEach(joint => {
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", joint.x);
+            circle.setAttribute("cy", joint.y);
+            circle.setAttribute("r", 6);
+            circle.classList.add("pipe-joint");
+            this.svg.appendChild(circle);
+        });
+        
+        // Initialize sensors at strategic locations
+        this.sensors = [];
+        const initialPositions = [
+            {pipeIndex: 8, position: 0.5},  // Middle of main pipe
+            {pipeIndex: 2, position: 0.7},  // Near source
+            {pipeIndex: 12, position: 0.3}, // Near destination
+            {pipeIndex: 5, position: 0.5},  // Branch
+            {pipeIndex: 15, position: 0.5}  // Cross connection
+        ];
+        
+        for (let i = 0; i < Math.min(this.sensorCount, initialPositions.length); i++) {
+            this.addSensorAt(initialPositions[i].pipeIndex, initialPositions[i].position);
+        }
+        
+        // Add remaining sensors randomly
+        for (let i = initialPositions.length; i < this.sensorCount; i++) {
+            this.addSensor();
+        }
+        
+        this.leaks = [];
+        this.totalLeaks = 0;
+        this.detectedLeaks = 0;
+        this.costSavings = 0;
+        this.updateMetrics();
+    }
+    
+    addSensor() {
+        if (this.sensors.length >= 15) return;
+        
+        // Find a random pipe to place sensor on
+        const pipeIndex = Math.floor(Math.random() * this.pipes.length);
+        const t = 0.2 + Math.random() * 0.6; // Position along pipe (20%-80%)
+        this.addSensorAt(pipeIndex, t);
+    }
+    
+    addSensorAt(pipeIndex, t) {
+        const pipe = this.pipes[pipeIndex];
+        const from = this.joints[pipe.from];
+        const to = this.joints[pipe.to];
+        const x = from.x + t * (to.x - from.x);
+        const y = from.y + t * (to.y - from.y);
+        
+        const sensor = {
+            x, y,
+            pipeIndex,
+            position: t,
+            active: false,
+            element: null
+        };
+        
+        this.sensors.push(sensor);
+        this.drawSensor(sensor);
+    }
+    
+    drawSensor(sensor) {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", sensor.x);
+        circle.setAttribute("cy", sensor.y);
+        circle.setAttribute("r", 8);
+        circle.classList.add("sensor");
+        circle.classList.add("sensor-inactive");
+        sensor.element = circle;
+        this.svg.appendChild(circle);
+    }
+    
+    removeSensor() {
+        if (this.sensors.length <= 1) return;
+        const sensor = this.sensors.pop();
+        this.svg.removeChild(sensor.element);
+    }
+    
+    adjustSensorCount(count) {
+        while (this.sensors.length < count) {
+            this.addSensor();
+        }
+        while (this.sensors.length > count) {
+            this.removeSensor();
+        }
+        this.sensorCount = count;
+    }
+    
+    addLeak() {
+        // Find a random pipe to create leak on
+        const pipeIndex = Math.floor(Math.random() * this.pipes.length);
+        const pipe = this.pipes[pipeIndex];
+        const from = this.joints[pipe.from];
+        const to = this.joints[pipe.to];
+        const t = Math.random(); // Position along pipe
+        const x = from.x + t * (to.x - from.x);
+        const y = from.y + t * (to.y - from.y);
+        
+        const leak = {
+            x, y,
+            pipeIndex,
+            position: t,
+            detected: false,
+            element: null
+        };
+        
+        this.leaks.push(leak);
+        this.totalLeaks++;
+        this.drawLeak(leak);
+    }
+    
+    drawLeak(leak) {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", leak.x);
+        circle.setAttribute("cy", leak.y);
+        circle.setAttribute("r", 10);
+        circle.classList.add("leak");
+        leak.element = circle;
+        this.svg.appendChild(circle);
+    }
+    
+    update() {
+        // Randomly add leaks - more frequent for gas
+        if (Math.random() < 0.05 * SIMULATION_SPEED && this.leaks.length < 8) {
+            this.addLeak();
+        }
+        
+        // Check sensor coverage
+        this.sensors.forEach(sensor => {
+            sensor.active = false;
+            sensor.element.classList.remove("sensor-active");
+            sensor.element.classList.add("sensor-inactive");
+        });
+        
+        this.leaks.forEach(leak => {
+            leak.detected = false;
+            
+            // Check if any sensor detects this leak
+            for (const sensor of this.sensors) {
+                const distance = Math.sqrt(Math.pow(leak.x - sensor.x, 2) + Math.pow(leak.y - sensor.y, 2));
+                if (distance < 40) { // Smaller detection radius for gas
+                    leak.detected = true;
+                    sensor.active = true;
+                    sensor.element.classList.remove("sensor-inactive");
+                    sensor.element.classList.add("sensor-active");
+                    if (!leak.element.hasAttribute("data-detected")) {
+                        this.detectedLeaks++;
+                        leak.element.setAttribute("data-detected", "true");
+                        this.costSavings += 5000 + Math.floor(Math.random() * 5000);
+                    }
+                    break;
+                }
+            }
+            
+            // Fade out detected leaks faster for gas
+            if (leak.detected && Math.random() < 0.2 * SIMULATION_SPEED) {
+                this.svg.removeChild(leak.element);
+                this.leaks = this.leaks.filter(l => l !== leak);
+            }
+        });
+        
+        this.updateMetrics();
+        
+        // Quantum learning effect
+        if (this.isStochastic && Math.random() < 0.05 * SIMULATION_SPEED) {
+            const effect = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            effect.setAttribute("cx", this.svg.clientWidth/2);
+            effect.setAttribute("cy", this.svg.clientHeight/2);
+            effect.setAttribute("r", 0);
+            effect.setAttribute("fill", "none");
+            effect.setAttribute("stroke", "rgba(138, 43, 226, 0.5)");
+            effect.setAttribute("stroke-width", "2");
+            this.svg.appendChild(effect);
+            
+            let radius = 0;
+            const grow = () => {
+                radius += 5;
+                effect.setAttribute("r", radius);
+                if (radius < 200) {
+                    requestAnimationFrame(grow);
+                } else {
+                    this.svg.removeChild(effect);
+                }
+            };
+            grow();
+        }
+    }
+    
+    updateMetrics() {
+        const detectionRate = this.totalLeaks > 0 ? Math.round((this.detectedLeaks / this.totalLeaks) * 100) : 0;
+        document.getElementById("gas-detection-rate").textContent = `${detectionRate}%`;
+        document.getElementById("gas-cost-savings").textContent = `$${this.costSavings.toLocaleString()}`;
+        document.getElementById("gas-leaks-found").textContent = this.detectedLeaks;
+        
+        performanceData.gas.detection.push(detectionRate);
+        performanceData.gas.cost.push(this.costSavings / 1000);
+        performanceData.gas.timestep.push(performanceData.timestep);
+        
+        if (performanceData.gas.detection.length > 100) {
+            performanceData.gas.detection.shift();
+            performanceData.gas.cost.shift();
+            performanceData.gas.timestep.shift();
+        }
+    }
+}
+
+function initCharts() {
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 0 },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: "rgba(0, 240, 255, 0.1)" },
+                ticks: { color: "rgba(255, 255, 255, 0.7)" }
+            },
+            x: {
+                grid: { color: "rgba(0, 240, 255, 0.1)" },
+                ticks: { color: "rgba(255, 255, 255, 0.7)" }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: "white",
+                    font: { family: "Orbitron" }
+                }
+            },
+            tooltip: {
+                enabled: true,
+                mode: "index",
+                intersect: false
+            }
+        },
+        elements: {
+            line: {
+                tension: 0.4,
+                borderWidth: 2,
+                fill: true
+            },
+            point: {
+                radius: 0
+            }
+        }
+    };
+    
+    waterChart = new Chart(document.getElementById("waterChart"), {
+        type: "line",
+        data: {
+            labels: performanceData.water.timestep,
+            datasets: [
+                {
+                    label: "Detection Rate",
+                    data: performanceData.water.detection,
+                    borderColor: "rgba(0, 240, 255, 1)",
+                    backgroundColor: "rgba(0, 240, 255, 0.1)",
+                    tension: 0.4,
+                    fill: true,
+                    yAxisID: 'y'
+                },
+                {
+                    label: "Cost Savings (k$)",
+                    data: performanceData.water.cost,
+                    borderColor: "rgba(0, 255, 170, 1)",
+                    backgroundColor: "rgba(0, 255, 170, 0.1)",
+                    tension: 0.4,
+                    fill: true,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            ...chartOptions,
+            scales: {
+                ...chartOptions.scales,
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    grid: { drawOnChartArea: false },
+                    ticks: { color: "rgba(0, 255, 170, 0.7)" }
+                }
+            }
+        }
+    });
+    
+    gasChart = new Chart(document.getElementById("gasChart"), {
+        type: "line",
+        data: {
+            labels: performanceData.gas.timestep,
+            datasets: [
+                {
+                    label: "Detection Rate",
+                    data: performanceData.gas.detection,
+                    borderColor: "rgba(0, 240, 255, 1)",
+                    backgroundColor: "rgba(0, 240, 255, 0.1)",
+                    tension: 0.4,
+                    fill: true,
+                    yAxisID: 'y'
+                },
+                {
+                    label: "Cost Savings (k$)",
+                    data: performanceData.gas.cost,
+                    borderColor: "rgba(0, 255, 170, 1)",
+                    backgroundColor: "rgba(0, 255, 170, 0.1)",
+                    tension: 0.4,
+                    fill: true,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            ...chartOptions,
+            scales: {
+                ...chartOptions.scales,
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    grid: { drawOnChartArea: false },
+                    ticks: { color: "rgba(0, 255, 170, 0.7)" }
+                }
+            }
+        }
+    });
+}
+
+function updateCharts() {
+    waterChart.data.labels = performanceData.water.timestep;
+    waterChart.data.datasets[0].data = performanceData.water.detection;
+    waterChart.data.datasets[1].data = performanceData.water.cost;
+    waterChart.update("none");
+    
+    gasChart.data.labels = performanceData.gas.timestep;
+    gasChart.data.datasets[0].data = performanceData.gas.detection;
+    gasChart.data.datasets[1].data = performanceData.gas.cost;
+    gasChart.update("none");
+    
+    document.getElementById("water-learning-rate").textContent = (1e-4 + 5e-5 * Math.random()).toFixed(6);
+    document.getElementById("gas-learning-rate").textContent = (1.5e-4 + 5e-5 * Math.random()).toFixed(6);
+}
+
+function switchTab(tabId) {
+    document.querySelectorAll(".tab-content").forEach(tab => {
+        tab.classList.remove("active");
+    });
+    document.querySelectorAll(".tab").forEach(tab => {
+        tab.classList.remove("active");
+    });
+    
+    document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add("active");
+    document.getElementById(tabId).classList.add("active");
+    
+    if (tabId === "performance") {
+        updateCharts();
+    } else if (tabId === "quantum") {
+        updateQuantumCircuits();
+    }
+}
+
+function changeAgentCount(type, change) {
+    const input = document.getElementById(`${type}-sensor-count`);
+    let value = parseInt(input.value) + change;
+    value = Math.max(parseInt(input.min), Math.min(parseInt(input.max), value));
+    input.value = value;
+    
+    if (isRunning && currentSimulations[type]) {
+        currentSimulations[type].adjustSensorCount(value);
+    }
+}
+
+function generateRandomCircuit(elementId, qubits = 2) {
+    const container = document.getElementById(elementId);
+    container.innerHTML = "";
+    
+    const width = container.offsetWidth - 40;
+    const height = 60 * qubits + 40;
+    container.style.minHeight = `${height}px`;
+    
+    // Create qubit wires
+    for (let i = 0; i < qubits; i++) {
+        const wire = document.createElement("div");
+        wire.className = "wire";
+        wire.style.top = 60 + 60 * i + "px";
+        container.appendChild(wire);
+        
+        const label = document.createElement("div");
+        label.className = "qubit-label";
+        label.style.top = 60 + 60 * i - 10 + "px";
+        label.textContent = `Qubit ${i}`;
+        container.appendChild(label);
+    }
+    
+    // Create gates
+    const gateTypes = ["H", "X", "Y", "Z", "CNOT", "RY", "M"];
+    const gateCount = 3 + Math.floor(4 * Math.random());
+    
+    for (let i = 0; i < gateCount; i++) {
+        const gateType = gateTypes[Math.floor(Math.random() * gateTypes.length)];
+        const qubit = Math.floor(Math.random() * qubits);
+        const position = 50 + Math.random() * (width - 100);
+        
+        if (gateType === "CNOT" && qubits > 1) {
+            const controlQubit = qubit;
+            const targetQubit = (qubit + 1) % qubits;
+            
+            // Control dot
+            const control = document.createElement("div");
+            control.className = "control-dot";
+            control.style.top = 60 + 60 * controlQubit + "px";
+            control.style.left = `${position}px`;
+            container.appendChild(control);
+            
+            // Target gate (X)
+            const target = document.createElement("div");
+            target.className = "quantum-gate gate-x";
+            target.style.top = 60 + 60 * targetQubit - 15 + "px";
+            target.style.left = `${position}px`;
+            target.textContent = "X";
+            container.appendChild(target);
+            
+            // Connection line
+            const connection = document.createElement("div");
+            connection.style.position = "absolute";
+            connection.style.left = `${position}px`;
+            connection.style.top = 60 + 60 * Math.min(controlQubit, targetQubit) + "px";
+            connection.style.width = "2px";
+            connection.style.height = 60 * Math.abs(controlQubit - targetQubit) + "px";
+            connection.style.background = "rgba(255, 0, 170, 0.7)";
+            container.appendChild(connection);
+        } else if (gateType === "M") {
+            const measurement = document.createElement("div");
+            measurement.className = "measurement";
+            measurement.style.top = 60 + 60 * qubit - 15 + "px";
+            measurement.style.left = `${position}px`;
+            measurement.textContent = "M";
+            container.appendChild(measurement);
+        } else {
+            const gate = document.createElement("div");
+            gate.className = `quantum-gate gate-${gateType.toLowerCase()}`;
+            gate.style.top = 60 + 60 * qubit - 15 + "px";
+            gate.style.left = `${position}px`;
+            gate.textContent = gateType;
+            container.appendChild(gate);
+        }
+    }
+}
+
+function updateQuantumCircuits() {
+    generateRandomCircuit("water-circuit", 2);
+    generateRandomCircuit("gas-circuit", 3);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    initCharts();
+    updateQuantumCircuits();
+    
+    // Tab switching
+    document.querySelectorAll(".tab").forEach(tab => {
+        tab.addEventListener("click", function() {
+            switchTab(this.getAttribute("data-tab"));
+        });
+    });
+    
+    // Sensor count controls
+    document.getElementById("sensor-increase").addEventListener("click", () => changeAgentCount("sensor", 1));
+    document.getElementById("sensor-decrease").addEventListener("click", () => changeAgentCount("sensor", -1));
+    document.getElementById("gas-sensor-increase").addEventListener("click", () => changeAgentCount("gas-sensor", 1));
+    document.getElementById("gas-sensor-decrease").addEventListener("click", () => changeAgentCount("gas-sensor", -1));
+    
+    // Radio button changes
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener("change", function() {
+            if (isRunning) {
+                const simType = this.name.split("-")[0];
+                const isStochastic = this.id.includes("stochastic");
+                
+                if (simType === "pipe") {
+                    currentSimulations.water = new PipeSimulation(
+                        document.getElementById("pipeCanvas"), 
+                        isStochastic
+                    );
+                } else if (simType === "gas") {
+                    currentSimulations.gas = new GasPipeSimulation(
+                        document.getElementById("gasCanvas"), 
+                        isStochastic
+                    );
+                }
+            }
+        });
+    });
+    
+    // Run simulation button
+    document.getElementById("runSim").addEventListener("click", function() {
+        if (isRunning) {
+            // Stop simulation
+            animationIds.forEach(id => cancelAnimationFrame(id));
+            animationIds = [];
+            isRunning = false;
+            this.textContent = "Run Quantum Optimization";
+        } else {
+            // Start simulation
+            isRunning = true;
+            this.textContent = "Stop Optimization";
+            
+            performanceData.timestep = 0;
+            performanceData.water = { detection: [], cost: [], timestep: [] };
+            performanceData.gas = { detection: [], cost: [], timestep: [] };
+            
+            const isWaterStochastic = document.getElementById("pipe-stochastic").checked;
+            const isGasStochastic = document.getElementById("gas-stochastic").checked;
+            
+            currentSimulations.water = new PipeSimulation(
+                document.getElementById("pipeCanvas"), 
+                isWaterStochastic
+            );
+            
+            currentSimulations.gas = new GasPipeSimulation(
+                document.getElementById("gasCanvas"), 
+                isGasStochastic
+            );
+            
+            function animate() {
+                currentSimulations.water.update();
+                currentSimulations.gas.update();
+                
+                performanceData.timestep++;
+                
+                if (performanceData.timestep % 10 === 0) {
+                    updateCharts();
+                }
+                
+                if (performanceData.timestep % 20 === 0 && 
+                    document.getElementById("quantum").classList.contains("active")) {
+                    updateQuantumCircuits();
+                }
+                
+                animationIds.push(requestAnimationFrame(animate));
+            }
+            
+            animate();
+        }
+    });
+    
+    // Handle window resize
+    window.addEventListener("resize", function() {
+        if (currentSimulations.water) {
+            currentSimulations.water.init();
+        }
+        if (currentSimulations.gas) {
+            currentSimulations.gas.init();
+        }
+    });
+});
+</script>
+</body>
+</html>
