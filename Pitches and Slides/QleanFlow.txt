@@ -1,0 +1,136 @@
+QleanFlow
+
+Slide 1 – Bold Claim
+We’re all drinking mercury.
+Not just rural villagers.
+Not just those near mining sites.
+It's in your water too.
+
+Slide 2 – What's in Our Water?
+    • Mercury
+    • Arsenic
+    • Cyanide
+    • Lead
+    • Coliforms
+👉 These aren’t distant problems — they’re already in over 60% of surface water sources near mining zones in Ghana.
+Source: Water Research Institute, Ghana | WHO
+
+Slide 3 – Where Does It Start?
+It starts here:
+    • River Pra
+    • Offin
+    • Ankobra
+    • Black Volta
+    • White Volta
+All of them polluted by illegal mining (GALAMSEY) operations.
+
+Slide 4 – The Route
+    • Contaminants seep into:
+        ◦ Groundwater
+        ◦ Streams
+        ◦ Boreholes
+        ◦ Farmlands
+    • Then into your cup, your food, and eventually...
+        ◦ Your bloodstream
+
+ Slide 5 – Oops!
+That "clear" water?
+It’s not clean.
+Over 30% of water samples that look clean in mining zones are chemically unsafe to drink.
+No odor. No color.
+Just poison.
+
+Slide 6 – The Metrics (Verifiable Data)
+    • 5,000+ children in Ghana suffer from waterborne diseases yearly in mining-affected regions
+    • 20+ communities rely solely on polluted rivers
+    • 1 out of every 4 water samples from affected zones show toxic contamination
+
+Slide 7 – Spoiler Alert
+Water purification alone won't save us.
+Without smart distribution, the clean water never reaches those who need it most.
+
+Slide 8 – How It Gets Into Us
+    • We bathe in it.
+    • We cook with it.
+
+    • We irrigate with it.
+    • We give it to our children.
+The body doesn't reject mercury — it absorbs it.
+And it stays.
+
+Slide 9 – The Impact (Annually)
+    • 2,300+ reported water poisoning cases (underreported)
+    • $13M in health costs related to water contamination in mining zones
+    • Agricultural yield drops due to polluted irrigation
+    • Unreported long-term damage to kidneys, brains, unborn children
+
+Slide 10 – Fix It?
+Yes.
+But not with guesswork, random drilling, or politics.
+We need:
+    • Real-time data
+    • Smart purification deployment
+    • Efficient water distribution
+
+Slide 11 – Reality Check
+Current efforts:
+    • Random boreholes
+    • Manual testing
+    • No prioritization
+    • No real tracking
+    • High cost, low impact
+
+Slide 12 – Our Solution: QleanFlow
+QleanFlow is a quantum-powered system that detects, purifies, and distributes clean water — starting with Ghana’s most contaminated zones.
+
+ Slide 13 – How It Works
+    • Quantum clustering identifies high-risk zones
+    • QAOA optimizes water delivery routes
+    • Sensors + datasets inform purification needs
+    • Dashboard visualizes risk, routes, and delivery in real-time
+
+ Slide 14 – Roadmap
+Phase 1: Synthetic data, modeling, prototype
+Phase 2: Deploy in 3 mining-affected regions
+Phase 3: Partner with NGOs, scale to other West African nations
+Phase 4: Real-time satellite/sensor data + predictive alerts
+
+ Slide 15 – Infrastructure
+    • Modular purification units (solar-powered)
+    • Existing logistics for distribution
+    • NGO & Government data integrations
+    • Lightweight frontend + backend + quantum API integration
+
+ Slide 16 – Business Model
+    • B2G / B2NGO SaaS solution
+    • Licensing dashboard + route optimization tools
+    • Offer purification units as bundled or freemium
+    • Grants + SDG partnerships for initial scale
+
+ Slide 17 – SDG Alignment
+    • SDG 6: Clean Water and Sanitation
+    • SDG 3: Good Health and Well-being
+    • SDG 12: Responsible Consumption and Production
+    • SDG 13: Climate Action
+    • SDG 9: Industry, Innovation, and Infrastructure
+
+Slide 18 – Summary
+Problem
+Mining has turned clean water into a silent killer.
+Solution
+QleanFlow combines quantum computing and smart purification to detect, clean, and deliver safe water where it’s needed most.
+Technologies
+    • Classical Support Vector Machine (Scikit Learn)
+    • Quantum Neural Networks (QNN)
+    • Quantum Support Vector Machine (QSVC)
+    • Real-time dashboards
+    • Local datasets
+Impact
+    • Safer water for 1000s of rural residents
+    • Lower healthcare costs
+    • Smarter humanitarian response
+    • Environmental justice
+Market
+    • Governments, NGOs, Water Authorities
+    • Starting in Ghana, expanding across Africa
+
